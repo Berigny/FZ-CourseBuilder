@@ -20,9 +20,15 @@ export class AIProcessor {
     if (!aiConfig.apiKey || !aiConfig.apiEndpoint || !aiConfig.modelId) {
       throw new Error('Missing required OpenRouter configuration');
     }
-
+  
+    // 🔍 Debugging: Log environment variables to check if they are correctly loaded
+    console.log("🔍 OpenRouter API Key:", aiConfig.apiKey);
+    console.log("🔍 OpenRouter API Endpoint:", aiConfig.apiEndpoint);
+    console.log("🔍 OpenRouter Model ID:", aiConfig.modelId);
+  
+    // ✅ Fix: Ensure full API path is set correctly
     this.client = axios.create({
-      baseURL: aiConfig.apiEndpoint,
+      baseURL: `${aiConfig.apiEndpoint}/v1/chat/completions`,  // ✅ Append endpoint correctly
       headers: {
         'Authorization': `Bearer ${aiConfig.apiKey}`,
         'Content-Type': 'application/json',
@@ -32,7 +38,7 @@ export class AIProcessor {
       timeout: timeoutConfig.request,
       validateStatus: (status) => status >= 200 && status < 300
     });
-
+  
     axiosRetry(this.client, {
       retries: aiConfig.retry.count,
       retryDelay: (retryCount) => {
