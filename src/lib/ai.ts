@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { aiConfig, timeoutConfig, aiRules } from '../config/ai';
 import { rateLimiter } from '../services/ai/rateLimit';
 import { handleAIError } from '../services/ai/errorHandler';
@@ -83,6 +84,8 @@ export class AIProcessor {
       const duration = Date.now() - startTime;
       aiMonitoring.recordLatency('openrouter', duration);
       aiMonitoring.recordTokenUsage('openrouter', estimatedTokens);
+  
+
       
       return result;
     } catch (error) {
