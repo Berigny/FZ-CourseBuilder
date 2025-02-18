@@ -4,14 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "setup:dev": "npm install && netlify link && netlify env:pull",
+    "setup:prod": "npm install && netlify link --context production && netlify env:pull",
+    "dev": "npm run setup:dev && vite",
     "build": "vite build",
+    "prod": "npm run setup:prod && vite build && netlify deploy --prod",
     "lint": "eslint .",
     "preview": "vite preview",
     "test:ai": "vite-node src/services/ai/testing.ts",
     "test:integration": "vite-node src/services/ai/integration.test.ts",
-    "test:content": "vite-node src/services/ai/test-content.ts"
-  },
+    "test:content": "vite-node src/services/ai/test-content.ts",
+    "start": "npm run dev"
+  },  
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",
     "@tanstack/react-query": "^5.24.1",
