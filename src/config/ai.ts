@@ -18,8 +18,8 @@ const env = envSchema.parse(import.meta.env);
 // OpenRouter Configuration
 export const aiConfig = {
   apiKey: env.VITE_OPENROUTER_API_KEY,
-  apiEndpoint: 'https://openrouter.ai/api/v1',
-  modelId: env.VITE_OPENROUTER_MODEL_ID || 'mistralai/mistral-7b-instruct',
+  apiEndpoint: 'https://openrouter.ai/api/v1',  // ✅ Updated from /api/openrouter-proxy
+  modelId: env.VITE_OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct',
   maxTokens: env.VITE_OPENROUTER_MAX_TOKENS,
   temperature: env.VITE_OPENROUTER_TEMPERATURE,
   timeout: env.VITE_OPENROUTER_TIMEOUT,

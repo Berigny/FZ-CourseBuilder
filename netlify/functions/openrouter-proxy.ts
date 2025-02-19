@@ -1,7 +1,7 @@
-import { Handler } from '@netlify/functions';
+import type { Handler } from '@netlify/functions';
 import axios from 'axios';
 
-const handler: Handler = async (event) => {
+export const handler: Handler = async (event) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
@@ -46,5 +46,3 @@ const handler: Handler = async (event) => {
     };
   }
 };
-
-export { handler };
