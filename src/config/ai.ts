@@ -18,7 +18,7 @@ const env = envSchema.parse(import.meta.env);
 // OpenRouter Configuration
 export const aiConfig = {
   apiKey: env.VITE_OPENROUTER_API_KEY,
-  apiEndpoint: '/api/openrouter-proxy',
+  apiEndpoint: 'https://openrouter.ai/api/v1',
   modelId: env.VITE_OPENROUTER_MODEL,
   maxTokens: env.VITE_OPENROUTER_MAX_TOKENS,
   temperature: env.VITE_OPENROUTER_TEMPERATURE,
