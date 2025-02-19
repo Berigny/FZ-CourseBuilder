@@ -14,3 +14,5 @@
 [dev]
   functions = "netlify/functions"
   publish = "dist"
+  targetPort = 4000
+

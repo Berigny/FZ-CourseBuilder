@@ -1,7 +1,14 @@
-import { Handler } from '@netlify/functions';
+import type { Handler, HandlerEvent } from '@netlify/functions';
 import axios from 'axios';
 
-const handler: Handler = async (event) => {
+// Ensure 'process.env' is recognized
+declare const process: {
+  env: {
+    VITE_OPENROUTER_API_KEY: string;
+  };
+};
+
+export const handler: Handler = async (event: HandlerEvent) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
@@ -24,27 +31,23 @@ const handler: Handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(response.data)
+      body: JSON.stringify(response.data),
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('OpenRouter proxy error:', error);
-    
+
     if (axios.isAxiosError(error)) {
       return {
         statusCode: error.response?.status || 500,
         body: JSON.stringify({
           error: error.response?.data || error.message
-        })
+        }),
       };
     }
 
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        error: 'Internal server error'
-      })
+      body: JSON.stringify({ error: 'Internal server error' }),
     };
   }
 };
-
-export { handler };
