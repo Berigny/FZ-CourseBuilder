@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "exports": {
+    "./netlify/functions/*": {
+      "types": "./netlify/functions/*.d.ts",
+      "default": "./netlify/functions/*.js"
+    }
+  },
   "scripts": {
     "setup:dev": "npm install && netlify link && netlify env:pull",
     "setup:prod": "npm install && netlify link --context production && netlify env:pull",
