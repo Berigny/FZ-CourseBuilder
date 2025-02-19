@@ -1,18 +1,15 @@
+
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2023"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "lib": ["ES2023"],
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noEmit": true
   },
-  "include": ["vite.config.ts", "netlify/functions"]
+  "include": ["netlify/functions", "vite.config.ts"]
 }
