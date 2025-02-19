@@ -17,6 +17,7 @@ console.log("🔍 OpenRouter API Key:", aiConfig.apiKey);
 console.log("🔍 OpenRouter API Endpoint:", aiConfig.apiEndpoint);
 console.log("🔍 OpenRouter Model ID:", aiConfig.modelId);
 
+
 export class AIProcessor {
   private static instance: AIProcessor;
   private client: AxiosInstance;
