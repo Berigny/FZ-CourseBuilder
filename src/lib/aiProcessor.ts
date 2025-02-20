@@ -32,12 +32,12 @@ export class AIProcessor {
   
     // 🔍 Debugging: Log environment variables to check if they are correctly loaded
     console.log("🔍 OpenRouter API Key:", aiConfig.apiKey);
-    console.log("🔍 OpenRouter API Endpoint:", aiConfig.apiEndpoint);
+    //console.log("🔍 OpenRouter API Endpoint:", aiConfig.apiEndpoint);
     console.log("🔍 OpenRouter Model ID:", aiConfig.modelId);
   
     // ✅ Fix: Ensure full API path is set correctly
     this.client = axios.create({
-      baseURL: `${aiConfig.apiEndpoint}`,  // ✅ Append endpoint correctly
+      baseURL: ``,  // 
       headers: {
         'Authorization': `Bearer ${aiConfig.apiKey}`,
         'Content-Type': 'application/json',
