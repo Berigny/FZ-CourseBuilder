@@ -16,7 +16,7 @@ const envSchema = z.object({
 // ✅ Validate environment variables
 const env = envSchema.parse({
   VITE_OPENROUTER_API_KEY: process.env.VITE_OPENROUTER_API_KEY || '',
-  VITE_OPENROUTER_API_ENDPOINT: process.env.VITE_OPENROUTER_API_ENDPOINT || '', 
+  //VITE_OPENROUTER_API_ENDPOINT: process.env.VITE_OPENROUTER_API_ENDPOINT || '', 
   VITE_OPENROUTER_MODEL: process.env.VITE_OPENROUTER_MODEL || '',
   VITE_OPENROUTER_MAX_TOKENS: process.env.VITE_OPENROUTER_MAX_TOKENS || '4000',
   VITE_OPENROUTER_TEMPERATURE: process.env.VITE_OPENROUTER_TEMPERATURE || '0.7',
