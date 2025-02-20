@@ -131,28 +131,32 @@ this.client = axios.create({
       return instance.executeWithRateLimit(async () => {
         try {
           console.log('Sending document processing request');
+          // Non-chat completions endpoint:
           const response = await instance.client.post('completions', {
             model: aiConfig.modelId,
-            prompt: `You are an expert at processing educational content and extracting structured information. 
-          Always respond with well-structured content including a title, sections, and key points. 
-          Process this educational document and extract key information in a structured format with clear sections and subsections:
-          
-          ${fileContent}`,
+            prompt: `You are an expert at processing educational content and extracting structured information.
+Always respond with well-structured content including a title, sections, and key points.
+Process this educational document and extract key information in a structured format with clear sections and subsections:
+
+${fileContent}`,
             temperature: aiConfig.temperature,
             max_tokens: aiConfig.maxTokens
           });
-          
 
-          if (!response.data?.choices?.[0]?.message?.content) {
+          // For non-chat completions, check `choices[0].text`:
+          if (!response.data?.choices?.[0]?.text) {
             throw new Error('Invalid response format from OpenRouter API');
           }
+
+          // Grab the returned text
+          const content = response.data.choices[0].text;
 
           // Create a new lesson in the database
           const { data: lesson, error: insertError } = await supabase
             .from('lessons')
             .insert({
               title: file.name.replace(/\.[^/.]+$/, ''),
-              content: response.data.choices[0].message.content,
+              content: content,
               user_id: user.id,
               status: 'processing'
             })
@@ -167,7 +171,7 @@ this.client = axios.create({
             success: true,
             data: {
               lesson_id: lesson.id,
-              content: response.data.choices[0].message.content
+              content: content
             }
           };
         } catch (error) {
@@ -179,6 +183,7 @@ this.client = axios.create({
       return handleAIError(error);
     }
   }
+
 
   static async evaluateLesson(lessonId: string): Promise<ProcessingResult> {
     try {
