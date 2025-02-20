@@ -109,7 +109,7 @@ this.client = axios.create({
     } finally {
       if (permit) {
         console.log('Releasing permit');
-        rateLimiter.releasePermit(estimatedTokens);
+       // rateLimiter.releasePermit(estimatedTokens);
       }
     }
   }
@@ -133,19 +133,15 @@ this.client = axios.create({
           console.log('Sending document processing request');
           const response = await instance.client.post('completions', {
             model: aiConfig.modelId,
-            messages: [
-              {
-                role: 'system',
-                content: 'You are an expert at processing educational content and extracting structured information. Always respond with well-structured content including a title, sections, and key points.'
-              },
-              {
-                role: 'user',
-                content: `Process this educational document and extract key information in a structured format with clear sections and subsections: ${fileContent}`
-              }
-            ],
+            prompt: `You are an expert at processing educational content and extracting structured information. 
+          Always respond with well-structured content including a title, sections, and key points. 
+          Process this educational document and extract key information in a structured format with clear sections and subsections:
+          
+          ${fileContent}`,
             temperature: aiConfig.temperature,
             max_tokens: aiConfig.maxTokens
           });
+          
 
           if (!response.data?.choices?.[0]?.message?.content) {
             throw new Error('Invalid response format from OpenRouter API');

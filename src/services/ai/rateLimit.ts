@@ -34,11 +34,11 @@ class RateLimiter {
     return true;
   }
 
-  releasePermit(tokenCount: number) {
+/*  releasePermit(tokenCount: number) {
     this.activeRequests = Math.max(0, this.activeRequests - 1);
     this.processQueue();
   }
-
+*/
   private async processQueue() {
     if (this.queue.length === 0 || this.activeRequests >= rateLimitConfig.maxConcurrentRequests) {
       return;

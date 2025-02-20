@@ -1,6 +1,9 @@
 //import { ContentComponent, ContentGap, RefinementSuggestion } from '../../lib/nvidia';
 
 export interface AIProvider {
+  generateImprovements(gaps: any, components: any): any;
+  identifyGaps(components: any): any;
+  analyzeContent(sampleContent: string): any;
   //analyzeContent(content: string): Promise<ContentComponent[]>;
   //identifyGaps(components: ContentComponent[]): Promise<ContentGap[]>;
   //generateImprovements(gaps: ContentGap[], components: ContentComponent[]): Promise<RefinementSuggestion[]>;

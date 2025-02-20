@@ -1,6 +1,6 @@
 import { AIServiceFactory } from './factory';
 import { aiMonitoring } from './monitoring';
-import { rateLimiter } from './rateLimit';
+//import { rateLimiter } from './rateLimit';
 import { contentComponentSchema, contentGapSchema, refinementSuggestionSchema } from './validation';
 import { z } from 'zod';
 import axios, { AxiosError } from 'axios';
@@ -86,7 +86,7 @@ async function testProvider(provider: 'nvidia' | 'openai' | 'anthropic') {
     
     // Validate components
     try {
-      await Promise.all(components.map(component => 
+      await Promise.all(components.map((component: unknown) => 
         validateResponse(component, contentComponentSchema)
       ));
     } catch (error) {
@@ -107,7 +107,7 @@ async function testProvider(provider: 'nvidia' | 'openai' | 'anthropic') {
     
     // Validate gaps
     try {
-      await Promise.all(gaps.map(gap => 
+      await Promise.all(gaps.map((gap: unknown) => 
         validateResponse(gap, contentGapSchema)
       ));
     } catch (error) {
@@ -128,7 +128,7 @@ async function testProvider(provider: 'nvidia' | 'openai' | 'anthropic') {
     
     // Validate improvements
     try {
-      await Promise.all(improvements.map(improvement => 
+      await Promise.all(improvements.map((improvement: unknown) => 
         validateResponse(improvement, refinementSuggestionSchema)
       ));
     } catch (error) {
