@@ -148,6 +148,8 @@ ${fileContent}`,
             throw new Error('Invalid response format from OpenRouter API');
           }
 
+          console.log('Full response data:', response.data);
+
           // Grab the returned text
           const content = response.data.choices[0].text;
 
