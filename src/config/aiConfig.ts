@@ -17,7 +17,7 @@ const envSchema = z.object({
 const env = envSchema.parse({
   VITE_OPENROUTER_API_KEY: process.env.VITE_OPENROUTER_API_KEY || '',
   VITE_OPENROUTER_API_ENDPOINT: process.env.VITE_OPENROUTER_API_ENDPOINT || 'https://openrouter.ai/api/v1', // ✅ Added this
-  VITE_OPENROUTER_MODEL: process.env.VITE_OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct',
+  VITE_OPENROUTER_MODEL: process.env.VITE_OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct:free',
   VITE_OPENROUTER_MAX_TOKENS: process.env.VITE_OPENROUTER_MAX_TOKENS || '4000',
   VITE_OPENROUTER_TEMPERATURE: process.env.VITE_OPENROUTER_TEMPERATURE || '0.7',
   VITE_OPENROUTER_TIMEOUT: process.env.VITE_OPENROUTER_TIMEOUT || '120000',
