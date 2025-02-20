@@ -20,7 +20,13 @@ export const handler: Handler = async (event: HandlerEvent) => {
   try {
     const body = JSON.parse(event.body || '{}');
 
-    const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', body, {
+    // ✅ Fix: Ensure the API endpoint doesn't have duplicate paths
+    const apiEndpoint = 'https://openrouter.ai/api/v1/chat/completions';
+    const sanitizedApiEndpoint = apiEndpoint.replace(/\/v1\/chat\/completions\/v1\/chat\/completions/g, "/v1/chat/completions");
+
+    console.log("✅ Sanitized OpenRouter API Endpoint:", sanitizedApiEndpoint);
+
+    const response = await axios.post(sanitizedApiEndpoint, body, {
       headers: {
         'Authorization': `Bearer ${process.env.VITE_OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json',
