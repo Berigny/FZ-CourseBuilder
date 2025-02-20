@@ -71,3 +71,6 @@ export const timeoutConfig = {
 
 export type AIConfig = typeof aiConfig;
 export type TimeoutConfig = typeof timeoutConfig;
+
+console.log("📡 Loaded API Endpoint:", aiConfig.apiEndpoint);
+
