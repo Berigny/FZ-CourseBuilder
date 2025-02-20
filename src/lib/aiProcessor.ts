@@ -34,19 +34,24 @@ export class AIProcessor {
     console.log("🔍 OpenRouter API Key:", aiConfig.apiKey);
     //console.log("🔍 OpenRouter API Endpoint:", aiConfig.apiEndpoint);
     console.log("🔍 OpenRouter Model ID:", aiConfig.modelId);
-  
-    // ✅ Fix: Ensure full API path is set correctly
-    this.client = axios.create({
-      baseURL: aiConfig.apiEndpoint,  // ✅ Correct - Ensures correct API path
-      headers: {
-        'Authorization': `Bearer ${aiConfig.apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://starlit-torrone-f24099.netlify.app',
-        'X-Title': 'Educational Content Processing System'
-      },
-      timeout: timeoutConfig.request,
-      validateStatus: (status) => status >= 200 && status < 300
-    });
+
+// Ensure the API endpoint doesn't have duplicate paths
+const sanitizedApiEndpoint = aiConfig.apiEndpoint.replace(/\/v1\/chat\/completions\/v1\/chat\/completions/g, "/v1/chat/completions");
+
+console.log("✅ Sanitized API Endpoint:", sanitizedApiEndpoint);
+
+// ✅ Fix: Ensure full API path is set correctly
+this.client = axios.create({
+  baseURL: sanitizedApiEndpoint,  // ✅ Correct - Ensures correct API path
+  headers: {
+    'Authorization': `Bearer ${aiConfig.apiKey}`,
+    'Content-Type': 'application/json',
+    'HTTP-Referer': 'https://starlit-torrone-f24099.netlify.app',
+    'X-Title': 'Educational Content Processing System'
+  },
+  timeout: timeoutConfig.request,
+  validateStatus: (status) => status >= 200 && status < 300
+});
   
     axiosRetry(this.client, {
       retries: aiConfig.retry.count,
@@ -126,7 +131,7 @@ export class AIProcessor {
       return instance.executeWithRateLimit(async () => {
         try {
           console.log('Sending document processing request');
-          const response = await instance.client.post('/chat/completions', {
+          const response = await instance.client.post('completions', {
             model: aiConfig.modelId,
             messages: [
               {
