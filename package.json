@@ -13,7 +13,7 @@
     "setup:dev": "npm install && npm list zod || npm install zod && npm list react || npm install react react-dom && netlify link && netlify env:pull",
     "setup:prod": "npm install && npm list zod || npm install zod && npm list react || npm install react react-dom && netlify link --context production && netlify env:pull",
     "dev": "npm run setup:dev && vite",
-    "build": "vite build && netlify build",
+    "build": "vite build",
     "prod": "npm run setup:prod && vite build && netlify deploy --prod",
     "lint": "eslint .",
     "preview": "vite preview",
