@@ -1,11 +1,14 @@
+import { aiConfig, timeoutConfig } from '../config/aiConfig'; // ✅ Fixed Import Path
 import { supabase } from './supabase';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { aiConfig, timeoutConfig, aiRules } from '../config/ai';
 import { rateLimiter } from '../services/ai/rateLimit';
 import { handleAIError } from '../services/ai/errorHandler';
 import { aiMonitoring } from '../services/ai/monitoring';
+
+console.log("🔍 OpenRouter API Key:", aiConfig.apiKey);
+console.log("🔍 OpenRouter API Endpoint:", aiConfig.apiEndpoint);
+console.log("🔍 OpenRouter Model ID:", aiConfig.modelId);
 
 interface ProcessingResult {
   success: boolean;
@@ -34,7 +37,7 @@ export class AIProcessor {
   
     // ✅ Fix: Ensure full API path is set correctly
     this.client = axios.create({
-      baseURL: `${aiConfig.apiEndpoint}/v1/chat/completions`,  // ✅ Append endpoint correctly
+      baseURL: `${aiConfig.apiEndpoint}/chat/completions`,  // ✅ Append endpoint correctly
       headers: {
         'Authorization': `Bearer ${aiConfig.apiKey}`,
         'Content-Type': 'application/json',
@@ -123,7 +126,7 @@ export class AIProcessor {
       return instance.executeWithRateLimit(async () => {
         try {
           console.log('Sending document processing request');
-          const response = await instance.client.post('/v1/chat/completions', {
+          const response = await instance.client.post('/chat/completions', {
             model: aiConfig.modelId,
             messages: [
               {
@@ -193,7 +196,7 @@ export class AIProcessor {
 
       return instance.executeWithRateLimit(async () => {
         console.log('Sending lesson evaluation request');
-        const response = await instance.client.post('/v1/chat/completions', {
+        const response = await instance.client.post('/chat/completions', {
           model: aiConfig.modelId,
           messages: [
             {
@@ -248,7 +251,7 @@ export class AIProcessor {
 
       return instance.executeWithRateLimit(async () => {
         console.log('Sending lesson refinement request');
-        const response = await instance.client.post('/v1/chat/completions', {
+        const response = await instance.client.post('/chat/completions', {
           model: aiConfig.modelId,
           messages: [
             {

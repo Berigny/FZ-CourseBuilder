@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AIProcessor } from '../lib/ai';
+import { AIProcessor } from '../lib/aiProcessor';
 import { supabase } from '../lib/supabase';
 
 interface Log {

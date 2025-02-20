@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import { useState } from 'react'; // ✅ No warning, works fine!
 import { testAIProvider, runAllTests } from '../services/ai/testing';
 import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { AIServiceError } from '../services/ai/types';

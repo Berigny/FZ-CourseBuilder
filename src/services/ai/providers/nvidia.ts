@@ -4,7 +4,7 @@ import type { AIProvider, AIServiceConfig } from '../types';
 import type { ContentComponent, ContentGap, RefinementSuggestion } from '../../../lib/nvidia';
 import { handleAIError } from '../errorHandler';
 import { validateResponse, contentComponentSchema, contentGapSchema, refinementSuggestionSchema } from '../validation';
-import { nvidiaConfig, timeoutConfig, aiRules } from '../../../config/ai';
+import { nvidiaConfig, timeoutConfig, aiRules } from '../../../config/aiConfig';
 import { rateLimiter } from '../rateLimit';
 
 export class NvidiaService implements AIProvider {

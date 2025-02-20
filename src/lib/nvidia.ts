@@ -1,7 +1,7 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { supabase } from './supabase';
-import { aiConfig, timeoutConfig, aiRules } from '../config/ai';
+import { aiConfig, timeoutConfig, aiRules } from '../config/aiConfig';
 import { rateLimiter } from '../services/ai/rateLimit';
 import { handleAIError } from '../services/ai/errorHandler';
 import { aiMonitoring } from '../services/ai/monitoring';

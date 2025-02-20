@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AIProcessor } from '../lib/ai';
+import { AIProcessor } from '../lib/aiProcessor';
 import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 interface TestResult {

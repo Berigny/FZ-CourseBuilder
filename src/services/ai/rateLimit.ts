@@ -1,4 +1,4 @@
-import { rateLimitConfig } from '../../config/ai';
+import { rateLimitConfig } from '../../config/aiConfig';
 
 class RateLimiter {
   private requestCount: number = 0;

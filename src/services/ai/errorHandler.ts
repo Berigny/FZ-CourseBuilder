@@ -1,4 +1,4 @@
-import type { AIServiceError } from './types';
+//import type { AIServiceError } from './types';
 import { AxiosError } from 'axios';
 import { z } from 'zod';
 import { aiMonitoring } from './monitoring';
