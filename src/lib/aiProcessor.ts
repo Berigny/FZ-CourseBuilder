@@ -37,7 +37,7 @@ export class AIProcessor {
   
     // ✅ Fix: Ensure full API path is set correctly
     this.client = axios.create({
-      baseURL: ``,  // 
+      baseURL: aiConfig.apiEndpoint,  // ✅ Correct - Ensures correct API path
       headers: {
         'Authorization': `Bearer ${aiConfig.apiKey}`,
         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export class AIProcessor {
       return instance.executeWithRateLimit(async () => {
         try {
           console.log('Sending document processing request');
-          const response = await instance.client.post('', {
+          const response = await instance.client.post('/chat/completions', {
             model: aiConfig.modelId,
             messages: [
               {
@@ -196,7 +196,7 @@ export class AIProcessor {
 
       return instance.executeWithRateLimit(async () => {
         console.log('Sending lesson evaluation request');
-        const response = await instance.client.post('', {
+        const response = await instance.client.post('/chat/completions', {
           model: aiConfig.modelId,
           messages: [
             {
@@ -251,7 +251,7 @@ export class AIProcessor {
 
       return instance.executeWithRateLimit(async () => {
         console.log('Sending lesson refinement request');
-        const response = await instance.client.post('', {
+        const response = await instance.client.post('/chat/completions', {
           model: aiConfig.modelId,
           messages: [
             {
