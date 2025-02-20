@@ -1,4 +1,5 @@
-import { rateLimitConfig } from '../../config/aiConfig';
+import { rateLimitConfig } from '../../config/aiConfig';  // ✅ Corrected import path
+
 
 class RateLimiter {
   private requestCount: number = 0;
