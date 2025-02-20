@@ -2350,7 +2350,7 @@ function replaceAt(array, index, value) {
   copy[index] = value;
   return copy;
 }
-var _client3, _result, _queries2, _options, _observers2, _combinedResult, _lastCombine, _lastResult, _QueriesObserver_instances, trackResult_fn, combineResult_fn, findMatchingObservers_fn, onUpdate_fn, notify_fn2, _a10;
+var _client3, _result, _queries2, _options, _observers2, _combinedResult, _lastCombine, _lastResult, _observerMatches, _QueriesObserver_instances, trackResult_fn, combineResult_fn, findMatchingObservers_fn, onUpdate_fn, notify_fn2, _a10;
 var QueriesObserver = (_a10 = class extends Subscribable {
   constructor(client, queries, options) {
     super();
@@ -2363,6 +2363,7 @@ var QueriesObserver = (_a10 = class extends Subscribable {
     __privateAdd(this, _combinedResult);
     __privateAdd(this, _lastCombine);
     __privateAdd(this, _lastResult);
+    __privateAdd(this, _observerMatches, []);
     __privateSet(this, _client3, client);
     __privateSet(this, _options, options);
     __privateSet(this, _queries2, []);
@@ -2406,6 +2407,7 @@ var QueriesObserver = (_a10 = class extends Subscribable {
     notifyManager.batch(() => {
       const prevObservers = __privateGet(this, _observers2);
       const newObserverMatches = __privateMethod(this, _QueriesObserver_instances, findMatchingObservers_fn).call(this, __privateGet(this, _queries2));
+      __privateSet(this, _observerMatches, newObserverMatches);
       newObserverMatches.forEach(
         (match) => match.observer.setOptions(match.defaultedQueryOptions, notifyOptions)
       );
@@ -2455,12 +2457,11 @@ var QueriesObserver = (_a10 = class extends Subscribable {
         return __privateMethod(this, _QueriesObserver_instances, combineResult_fn).call(this, r ?? result, combine);
       },
       () => {
-        return __privateMethod(this, _QueriesObserver_instances, trackResult_fn).call(this, result, queries);
+        return __privateMethod(this, _QueriesObserver_instances, trackResult_fn).call(this, result, matches);
       }
     ];
   }
-}, _client3 = new WeakMap(), _result = new WeakMap(), _queries2 = new WeakMap(), _options = new WeakMap(), _observers2 = new WeakMap(), _combinedResult = new WeakMap(), _lastCombine = new WeakMap(), _lastResult = new WeakMap(), _QueriesObserver_instances = new WeakSet(), trackResult_fn = function(result, queries) {
-  const matches = __privateMethod(this, _QueriesObserver_instances, findMatchingObservers_fn).call(this, queries);
+}, _client3 = new WeakMap(), _result = new WeakMap(), _queries2 = new WeakMap(), _options = new WeakMap(), _observers2 = new WeakMap(), _combinedResult = new WeakMap(), _lastCombine = new WeakMap(), _lastResult = new WeakMap(), _observerMatches = new WeakMap(), _QueriesObserver_instances = new WeakSet(), trackResult_fn = function(result, matches) {
   return matches.map((match, index) => {
     const observerResult = result[index];
     return !match.defaultedQueryOptions.notifyOnChangeProps ? match.observer.trackResult(observerResult, (accessedProp) => {
@@ -2513,7 +2514,8 @@ var QueriesObserver = (_a10 = class extends Subscribable {
   var _a12;
   if (this.hasListeners()) {
     const previousResult = __privateGet(this, _combinedResult);
-    const newResult = __privateMethod(this, _QueriesObserver_instances, combineResult_fn).call(this, __privateMethod(this, _QueriesObserver_instances, trackResult_fn).call(this, __privateGet(this, _result), __privateGet(this, _queries2)), (_a12 = __privateGet(this, _options)) == null ? void 0 : _a12.combine);
+    const newTracked = __privateMethod(this, _QueriesObserver_instances, trackResult_fn).call(this, __privateGet(this, _result), __privateGet(this, _observerMatches));
+    const newResult = __privateMethod(this, _QueriesObserver_instances, combineResult_fn).call(this, newTracked, (_a12 = __privateGet(this, _options)) == null ? void 0 : _a12.combine);
     if (previousResult !== newResult) {
       notifyManager.batch(() => {
         this.listeners.forEach((listener) => {
@@ -2704,7 +2706,7 @@ function dehydrateMutation(mutation) {
     ...mutation.meta && { meta: mutation.meta }
   };
 }
-function dehydrateQuery(query, serializeData) {
+function dehydrateQuery(query, serializeData, shouldRedactErrors) {
   var _a12;
   return {
     state: {
@@ -2717,6 +2719,9 @@ function dehydrateQuery(query, serializeData) {
     queryHash: query.queryHash,
     ...query.state.status === "pending" && {
       promise: (_a12 = query.promise) == null ? void 0 : _a12.then(serializeData).catch((error) => {
+        if (!shouldRedactErrors(error)) {
+          return Promise.reject(error);
+        }
         if (true) {
           console.error(
             `A query that was dehydrated as pending ended up rejecting. [${query.queryHash}]: ${error}; The error will be redacted in production builds`
@@ -2734,16 +2739,20 @@ function defaultShouldDehydrateMutation(mutation) {
 function defaultShouldDehydrateQuery(query) {
   return query.state.status === "success";
 }
+function defaultshouldRedactErrors(_) {
+  return true;
+}
 function dehydrate(client, options = {}) {
-  var _a12, _b, _c;
+  var _a12, _b, _c, _d;
   const filterMutation = options.shouldDehydrateMutation ?? ((_a12 = client.getDefaultOptions().dehydrate) == null ? void 0 : _a12.shouldDehydrateMutation) ?? defaultShouldDehydrateMutation;
   const mutations = client.getMutationCache().getAll().flatMap(
     (mutation) => filterMutation(mutation) ? [dehydrateMutation(mutation)] : []
   );
   const filterQuery = options.shouldDehydrateQuery ?? ((_b = client.getDefaultOptions().dehydrate) == null ? void 0 : _b.shouldDehydrateQuery) ?? defaultShouldDehydrateQuery;
-  const serializeData = options.serializeData ?? ((_c = client.getDefaultOptions().dehydrate) == null ? void 0 : _c.serializeData) ?? defaultTransformerFn;
+  const shouldRedactErrors = options.shouldRedactErrors ?? ((_c = client.getDefaultOptions().dehydrate) == null ? void 0 : _c.shouldRedactErrors) ?? defaultshouldRedactErrors;
+  const serializeData = options.serializeData ?? ((_d = client.getDefaultOptions().dehydrate) == null ? void 0 : _d.serializeData) ?? defaultTransformerFn;
   const queries = client.getQueryCache().getAll().flatMap(
-    (query) => filterQuery(query) ? [dehydrateQuery(query, serializeData)] : []
+    (query) => filterQuery(query) ? [dehydrateQuery(query, serializeData, shouldRedactErrors)] : []
   );
   return { mutations, queries };
 }
@@ -3001,14 +3010,13 @@ function useQueries({
   }
   const firstSingleResultWhichShouldThrow = optimisticResult.find(
     (result, index) => {
-      var _a12;
       const query = defaultedQueries[index];
       return query && getHasError({
         result,
         errorResetBoundary,
         throwOnError: query.throwOnError,
         query: client.getQueryCache().get(query.queryHash),
-        suspense: (_a12 = defaultedQueries[index]) == null ? void 0 : _a12.suspense
+        suspense: query.suspense
       });
     }
   );
@@ -3194,6 +3202,9 @@ function infiniteQueryOptions(options) {
 
 // node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js
 var React7 = __toESM(require_react(), 1);
+var hasProperty = (obj, key) => {
+  return typeof obj === "object" && obj !== null && key in obj;
+};
 var HydrationBoundary = ({
   children,
   options = {},
@@ -3218,7 +3229,8 @@ var HydrationBoundary = ({
         if (!existingQuery) {
           newQueries.push(dehydratedQuery);
         } else {
-          const hydrationIsNewer = dehydratedQuery.state.dataUpdatedAt > existingQuery.state.dataUpdatedAt;
+          const hydrationIsNewer = dehydratedQuery.state.dataUpdatedAt > existingQuery.state.dataUpdatedAt || // RSC special serialized then-able chunks
+          hasProperty(dehydratedQuery.promise, "status") && hasProperty(existingQuery.promise, "status") && dehydratedQuery.promise.status !== existingQuery.promise.status;
           const queryAlreadyQueued = hydrationQueue == null ? void 0 : hydrationQueue.find(
             (query) => query.queryHash === dehydratedQuery.queryHash
           );

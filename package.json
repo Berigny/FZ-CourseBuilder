@@ -10,8 +10,8 @@
     }
   },
   "scripts": {
-    "setup:dev": "npm install && npm list zod || npm install zod && npm list react || npm install react react-dom && netlify link && netlify env:pull",
-    "setup:prod": "npm install && npm list zod || npm install zod && npm list react || npm install react react-dom && netlify link --context production && netlify env:pull",
+    "setup:dev": "npm install && npm list zod || npm install zod && npm list react || npm install react react-dom && netlify link",
+    "setup:prod": "npm install && npm list zod || npm install zod && npm list react || npm install react react-dom && netlify link",
     "dev": "npm run setup:dev && vite",
     "build": "vite build",
     "prod": "npm run setup:prod && vite build && netlify deploy --prod",
