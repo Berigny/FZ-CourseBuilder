@@ -52,6 +52,8 @@ this.client = axios.create({
   timeout: timeoutConfig.request,
   validateStatus: (status) => status >= 200 && status < 300
 });
+
+console.log("axios:")
   
     axiosRetry(this.client, {
       retries: aiConfig.retry.count,
