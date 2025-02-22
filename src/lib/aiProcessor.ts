@@ -133,27 +133,35 @@ console.log("axios:")
       return instance.executeWithRateLimit(async () => {
         try {
           console.log('Sending document processing request');
+
+
+          
+          console.log('Sending document processing request');
           // Non-chat completions endpoint:
           const response = await instance.client.post('completions', {
             model: aiConfig.modelId,
             prompt: `You are an expert at processing educational content and extracting structured information.
-Always respond with well-structured content including a title, sections, and key points.
-Process this educational document and extract key information in a structured format with clear sections and subsections:
+          Always respond with well-structured content including a title, sections, and key points.
+          Process this educational document and extract key information in a structured format with clear sections and subsections:
 
-${fileContent}`,
+          ${fileContent}`,
             temperature: aiConfig.temperature,
             max_tokens: aiConfig.maxTokens
           });
 
-          // For non-chat completions, check `choices[0].text`:
+          // Log response status and full response for debugging
+          console.log("Response status:", response.status);
+          console.log("Full response data:", JSON.stringify(response.data, null, 2));
+
+          // Check if the expected field exists
           if (!response.data?.choices?.[0]?.text) {
-            throw new Error('Invalid response format from OpenRouter API');
+            throw new Error(`Invalid response format from OpenRouter API. Received: ${JSON.stringify(response.data)}`);
           }
 
-          console.log('Full response data:', response.data);
-
-          // Grab the returned text
+          // Retrieve the generated text
           const content = response.data.choices[0].text;
+
+          
 
           // Create a new lesson in the database
           const { data: lesson, error: insertError } = await supabase
